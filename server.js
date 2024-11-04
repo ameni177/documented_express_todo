@@ -1,5 +1,10 @@
 const express = require('express');
 const app = express();
+swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+
+const swaggerDocument = YAML.load('./swagger.yaml')
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use(express.json());
 
@@ -67,4 +72,5 @@ app.put('/todos/:id', (req, res) => {
 
 app.listen(3000, () => {
     console.log("server running on http://localhost:3000")
+    console.log("Swagger docs available at http://localhost:3000/api-docs")
 })
