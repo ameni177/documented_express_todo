@@ -1,24 +1,103 @@
 openapi: 3.0.0
 info:
-  title: ToDo-API
-  description: A simple todo-api.
-  version: 0.1.9
-servers:
-  - url: http://localhost:3000
+  title: Todo API
+  version: 1.0.0
+  description: API for managing todos
 paths:
   /todos:
     get:
-      summary: Returns all todos
-    responses:
-      "200":
-        description: "Successful get"
+      summary: Get all todos
+      responses:
+        200:
+          description: Returns all todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+    post:
+      summary: Add a new todo
+      requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: string
-  
-  
-  
-  
+              $ref: '#/components/schemas/TodoInput'
+      responses:
+        201:
+          description: Todo created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+  /todos/{id}:
+    get:
+      summary: Get a todo by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Returns a single todo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        404:
+          description: Todo not found
+    delete:
+      summary: Delete a todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: Todo deleted
+        404:
+          description: Todo not found
+    put:
+      summary: Update a todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoInput'
+      responses:
+        200:
+          description: Todo updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        404:
+          description: Todo not found
+components:
+  schemas:
+    Todo:
+      type: object
+      properties:
+        id:
+          type: integer
+        task:
+          type: string
+        completed:
+          type: boolean
+    TodoInput:
+      type: object
+      properties:
+        task:
+          type: string
